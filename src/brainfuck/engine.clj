@@ -8,6 +8,7 @@
             [brainfuck.utils :refer [inc-byte dec-byte]]))
 
 (defn tokenize
+  ;isaac
   "Tokenize the given code: return a vector of tokens, where each token is a 
   map with the following entries
     :symbol the symbol (character)
@@ -18,11 +19,20 @@
   valid (augmented) brainfuck symbols: > < + - . , * [ ]
   "
   [code]
-  ;; Code goes here
+  ;;isaac
+  (loop [lines (split-lines code) tokens (vector)]
+    if()
+
+
+
+
+
+    )
   nil
   )
 
 (defn find-matchings
+  ;soloman
   "Parse the given tokens returning a map that contains an entry for every [ and ]
   mapping its index in the given tokens to it matching symbol and vice-versa.
   
@@ -66,6 +76,17 @@
           ;; Code goes here
           
           ;; you implement other cases
+          ;; >
+          ;; <
+          ;;isaac
+          ;; +
+          ;; -
+          ;;soloman
+          ;; .
+          ;;isaac
+          ;; [
+          ;; ]
+          ;;soloman
           
           ;; we are providing the input case for you
           (or (= symbol \,) (= symbol \*))

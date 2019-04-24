@@ -96,8 +96,8 @@
             ;; +
             ;; -
             (or (= symbol \+) (= symbol \-))
-            	(recur (assoc data [cell] inc-byte) cell (inc instruction-pointer))
-              (recur (assoc data [cell] dec-byte) cell (inc instruction-pointer))
+              (recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
+               ;(assoc data data-pointer dec-byte) data-pointer (inc instruction-pointer)
             ;;soloman
             ;; .
             ;;isaac

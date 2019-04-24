@@ -20,16 +20,30 @@
   "
   [code]
   ;;isaac
-  (loop [lines (split-lines code) tokens (vector)]
-    if()
-
-
-
-
-
+  (let [lines (str/split-lines code) ]
+    (loop [ linecount 0 tokens (vector)]
+      (if(>= linecount (count lines)) ;if weve gone beyond the amount of lines
+        ;true
+        tokens ;return tokens
+        ;false
+        (do (print (get lines 0) "------------------------" (get lines 1) "--------------------" )
+        (recur (inc linecount) (concat tokens (map-indexed (fn [idx x] (
+                                                                        {:symbol x,
+                                                                         :line (+ linecount 1),
+                                                                         :column (+ idx 1)
+                                                                         }) 
+                                                           )        
+                                                 (seq (get lines linecount))
+                                              )
+                                )
+        )
+        )
+      )   
     )
-  nil
   )
+)
+
+
 
 (defn find-matchings
   ;soloman

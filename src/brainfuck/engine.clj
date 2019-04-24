@@ -95,8 +95,14 @@
             ;;isaac
             ;; +
             ;; -
-            (or (= symbol \+) (= symbol \-))
-              (recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
+            (= symbol \+)
+              (let [input (.read *in*)]
+                (recur(inc data-pointer)))
+              (= symbol \-)
+              (let [input (.read *in*)]
+                (recur(dec data-pointer)))
+            ;(or (= symbol \+) (= symbol \-))
+              ;(recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
                ;(assoc data data-pointer dec-byte) data-pointer (inc instruction-pointer)
             ;;soloman
             ;; .

@@ -24,22 +24,22 @@
     (loop [ linecount 0 tokens (vector)]
       (if(>= linecount (count lines)) ;if weve gone beyond the amount of lines
         ;true
-        tokens ;return tokens
+        ;(println "-----------------" (nth tokens 0) "----------------")
+        (vec(filter (fn [x] (str/includes? "><+-.,*[]" (str(:symbol x))))tokens)) ;return tokens [\> \< \+ \- \. \, \* \[ \]]
         ;false
-        (do (print (get lines 0) "------------------------" (get lines 1) "--------------------" )
-        (recur (inc linecount) (concat tokens (map-indexed (fn [idx x] (
+        ;(do (print (get lines 0) "------------------------" (get lines 1) "--------------------" )
+        (recur (inc linecount) (concat tokens (map-indexed (fn [idx x] 
                                                                         {:symbol x,
                                                                          :line (+ linecount 1),
                                                                          :column (+ idx 1)
-                                                                         }) 
+                                                                         }
                                                            )        
                                                  (seq (get lines linecount))
                                               )
                                 )
         )
-        )
-      )   
-    )
+      ) 
+    )   
   )
 )
 
@@ -112,3 +112,4 @@
                 (recur (assoc data data-pointer input) data-pointer (inc instruction-pointer)))
   
             :else (recur data data-pointer (inc instruction-pointer)))))))
+

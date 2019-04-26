@@ -25,7 +25,7 @@
       (if(>= linecount (count lines)) ;if weve gone beyond the amount of lines
         ;true
         ;(println "-----------------" (nth tokens 0) "----------------")
-        (vec(filter (fn [x] (str/includes? "><+-.,*[]" (str(:symbol x))))tokens)) ;return tokens [\> \< \+ \- \. \, \* \[ \]]
+        (vec(filter (fn [x] (str/includes? "><+-.,*[]" (str(:symbol x))))tokens)) ;return tokens filtered 
         ;false
         ;(do (print (get lines 0) "------------------------" (get lines 1) "--------------------" )
         (recur (inc linecount) (concat tokens (map-indexed (fn [idx x] 

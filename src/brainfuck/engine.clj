@@ -44,7 +44,6 @@
 )
 
 
-
 (defn find-matchings
   ;Saleban
   "Parse the given tokens returning a map that contains an entry for every [ and ]
@@ -59,13 +58,20 @@
   "
   [tokens]
   ;; Code goes here
-  (let [all-tokens (get tokens)]
-  (loop [x (- (count all-tokens) 1)] (when (> x 0) (
-    (if (= (get all-tokens x) "[" ) (find "]" all-tokens (comment (throw (RuntimeException. all-tokens)))) )
-    )))
-
-  )
-  )
+  ; (let [all-tokens tokens]
+  ; (loop [x (- (count all-tokens) 1)] (when (> x 0) (
+  ;   (if (= (get all-tokens x) "[" ) (find "]" all-tokens (comment (throw (RuntimeException. all-tokens)))) )
+  ;   )))
+    (let [begin (true? (filter (= (:symbol tokens) (str "["))))]
+      (let [end (true? (reverse (filter (= (:symbol tokens) (str "]")))))]
+        (if (= (count begin) (count end))
+          (into {} (flatten (mapv (fn [k v] {(.indexOf tokens k) (.indexOf tokens v)}) begin end)))
+          (throw (RuntimeException. "Unmatched brackets"))
+        )
+      )
+    )
+              
+)
           
 
  (defn interpret
@@ -118,6 +124,12 @@
             ;;isaac
             ;; [
             ;; ]
+            (= symbol \[)
+            (if (== (data-pointer) 0)
+              (recur data  (inc data-pointer) (instruction-pointer)))
+            (= symbol \])
+            (if (not (data-pointer) 0)
+              (recur data  (inc data-pointer) (instruction-pointer)))
             ;;Saleban
             
             ;; we are providing the input case for you

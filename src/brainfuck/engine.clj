@@ -46,7 +46,7 @@
 
 
 (defn find-matchings
-  ;soloman
+  ;Saleban
   "Parse the given tokens returning a map that contains an entry for every [ and ]
   mapping its index in the given tokens to it matching symbol and vice-versa.
   
@@ -110,7 +110,7 @@
             ;(or (= symbol \+) (= symbol \-))
               ;(recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
                ;(assoc data data-pointer dec-byte) data-pointer (inc instruction-pointer)
-            ;;soloman
+            ;;Saleban
             ;; .
             	(= symbol \.)
              ;; print data at pointer
@@ -118,7 +118,7 @@
             ;;isaac
             ;; [
             ;; ]
-            ;;soloman
+            ;;Saleban
             
             ;; we are providing the input case for you
             (or (= symbol \,) (= symbol \*))

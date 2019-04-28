@@ -16,17 +16,18 @@
   (:require [brainfuck.engine :refer [tokenize interpret find-matchings]]))
   
 
-(defmacro code-to-string
-  "Return a string containing the given raw code
-  
-  Ex (code-to-string + - + < >) -> \"+-+<>\"
-  
-  Whether the string contains whitespace is optional.
-  "
-  [first & rest]
-  ;; code goes here
-  nil
-  )
+  (defmacro code-to-string
+    "Return a string containing the given raw code
+    
+    Ex (code-to-string + - + < >) -> \"+-+<>\"
+    
+    Whether the string contains whitespace is optional.
+    "
+    [first & rest]
+    ;; code goes here
+    (let [strfirst (map #(str %) [first])]
+      (apply str strfirst))
+    )
 
 (defmacro bf
    "Run the given raw code"

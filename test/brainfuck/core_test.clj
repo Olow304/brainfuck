@@ -26,8 +26,50 @@
         (is (= (read-string (slurp "resources/hello_world.tok"))
               tokens)))))
 
-(deftest find-matchings-test
-  "Tests of find-matchings"
+(deftest find-matchings-standalone-test
+  "Tests of find-matchings, which do not rely on tokenize."
+  (testing "find-matchings (no errors)"
+    (is (= (find-matchings 
+             [{:symbol \+, :line 1, :column 1} {:symbol \+, :line 1, :column 2} 
+              {:symbol \+, :line 1, :column 3} {:symbol \+, :line 1, :column 4}
+              {:symbol \[, :line 4, :column 1} {:symbol \[, :line 4, :column 2}
+              {:symbol \-, :line 4, :column 3} {:symbol \+, :line 4, :column 4}
+              {:symbol \[, :line 4, :column 5} {:symbol \], :line 4, :column 6}
+              {:symbol \], :line 4, :column 7} {:symbol \], :line 4, :column 8}]) 
+             {8 9, 9 8, 5 10, 10 5, 4 11, 11 4})))
+
+  (testing "find-matchings (unmatched [)"
+    (is (thrown-with-msg? RuntimeException #".*4.*1.*"
+          (find-matchings
+            [{:symbol \+, :line 1, :column 1} {:symbol \+, :line 1, :column 2}
+             {:symbol \+, :line 1, :column 3} {:symbol \+, :line 1, :column 4}
+             {:symbol \[, :line 4, :column 1} {:symbol \[, :line 4, :column 2}
+             {:symbol \-, :line 4, :column 3} {:symbol \+, :line 4, :column 4}
+             {:symbol \[, :line 4, :column 5} {:symbol \], :line 4, :column 6}
+             {:symbol \], :line 4, :column 7} {:symbol \+, :line 4, :column 8}
+             {:symbol \+, :line 4, :column 9} {:symbol \+, :line 4, :column 10}
+             {:symbol \+, :line 4, :column 11}]))))
+
+  (testing "find-matchings (unmatched ])"
+    (is (thrown-with-msg? RuntimeException #".*6.*7.*"
+          (find-matchings 
+            [{:symbol \+, :line 1, :column 1} {:symbol \+, :line 1, :column 2}
+             {:symbol \+, :line 1, :column 3} {:symbol \+, :line 1, :column 4}
+             {:symbol \[, :line 1, :column 5} {:symbol \[, :line 4, :column 1}
+             {:symbol \[, :line 4, :column 2} {:symbol \-, :line 4, :column 3}
+             {:symbol \+, :line 4, :column 4} {:symbol \[, :line 4, :column 5}
+             {:symbol \], :line 4, :column 6} {:symbol \], :line 4, :column 7}
+             {:symbol \], :line 4, :column 8} {:symbol \+, :line 4, :column 9}
+             {:symbol \], :line 4, :column 10} {:symbol \+, :line 4, :column 11}
+             {:symbol \+, :line 6, :column 1} {:symbol \., :line 6, :column 2}
+             {:symbol \., :line 6, :column 3} {:symbol \., :line 6, :column 4}
+             {:symbol \., :line 6, :column 5} {:symbol \., :line 6, :column 6}
+             {:symbol \], :line 6, :column 7} {:symbol \+, :line 6, :column 8} 
+             {:symbol \+, :line 6, :column 9}])))))
+
+
+(deftest tokenize-and-find-matchings-test
+  "Tests of tokenizing and then finding matchings"
   (testing "find-matchings (no errors)"
     (is (= (find-matchings (tokenize "++++\n\n\n[[-+[]]]")) {8 9, 9 8, 5 10, 10 5, 4 11, 11 4})))
 

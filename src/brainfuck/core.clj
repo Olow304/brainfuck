@@ -25,7 +25,8 @@
   "
   [first & rest]
   ;; code goes here
-  nil
+  (let [strfirst (map #(str %) [first])]
+  	(apply str strfirst))
   )
 
 (defmacro bf

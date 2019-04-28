@@ -91,21 +91,30 @@
             
             ;; you implement other cases
             ;; >
+            (= symbol \>)
+              ;; increment data pointer 
+                (recur data (inc data-pointer) (inc instruction-pointer))
             ;; <
+           		(= symbol \>)
+             ;; decrement data pointer
+               (recur data (dec data-pointer) (inc instruction-pointer))
             ;;isaac
             ;; +
             ;; -
             (= symbol \+)
               (let [input (.read *in*)]
                 (recur(inc data-pointer)))
-              (= symbol \-)
-              (let [input (.read *in*)]
-                (recur(dec data-pointer)))
+             (= symbol \-)
+             (let [input (.read *in*)]
+               (recur(dec data-pointer)))
             ;(or (= symbol \+) (= symbol \-))
               ;(recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
                ;(assoc data data-pointer dec-byte) data-pointer (inc instruction-pointer)
             ;;soloman
             ;; .
+            	(= symbol \.)
+             ;; print data at pointer
+               (do (print (nth data data-pointer)) (recur data data-pointer (inc instruction-pointer)))
             ;;isaac
             ;; [
             ;; ]

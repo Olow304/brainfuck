@@ -65,7 +65,7 @@
     (let [begin (true? (filter (= (:symbol tokens) (str "["))))]
       (let [end (true? (reverse (filter (= (:symbol tokens) (str "]")))))]
         (if (= (count begin) (count end))
-          (into {} (flatten (mapv (fn [k v] {(.indexOf tokens k) (.indexOf tokens v)}) begin end)))
+          ;; to do
           (throw (RuntimeException. "Unmatched brackets"))
         )
       )

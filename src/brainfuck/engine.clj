@@ -24,10 +24,8 @@
     (loop [ linecount 0 tokens (vector)]
       (if(>= linecount (count lines)) ;if weve gone beyond the amount of lines
         ;true
-        ;(println "-----------------" (nth tokens 0) "----------------")
         (vec(filter (fn [x] (str/includes? "><+-.,*[]" (str(:symbol x))))tokens)) ;return tokens filtered 
         ;false
-        ;(do (print (get lines 0) "------------------------" (get lines 1) "--------------------" )
         (recur (inc linecount) (concat tokens (map-indexed (fn [idx x] 
                                                                         {:symbol x,
                                                                          :line (+ linecount 1),
@@ -44,7 +42,6 @@
 )
 
 
-
 (defn find-matchings
   ;Saleban
   "Parse the given tokens returning a map that contains an entry for every [ and ]
@@ -59,8 +56,20 @@
   "
   [tokens]
   ;; Code goes here
-  nil
-  )
+  ; (let [all-tokens tokens]
+  ; (loop [x (- (count all-tokens) 1)] (when (> x 0) (
+  ;   (if (= (get all-tokens x) "[" ) (find "]" all-tokens (comment (throw (RuntimeException. all-tokens)))) )
+  ;   )))
+    (let [begin (true? (filter (= (:symbol tokens) (str "["))))]
+      (let [end (true? (reverse (filter (= (:symbol tokens) (str "]")))))]
+        (if (= (count begin) (count end))
+          ;; to do
+          (throw (RuntimeException. "Unmatched brackets"))
+        )
+      )
+    )
+              
+)
           
 
  (defn interpret
@@ -101,15 +110,10 @@
             ;;isaac
             ;; +
             ;; -
-            ;(= symbol \+)
-              ;(let [input (.read *in*)]
-                ;(recur(inc data-pointer)))
-            ; (= symbol \-)
-             ;(let [input (.read *in*)]
-              ; (recur(dec data-pointer)))
-            ;(or (= symbol \+) (= symbol \-))
-              ;(recur (assoc data data-pointer inc-byte) data-pointer (inc instruction-pointer))
-               ;(assoc data data-pointer dec-byte) data-pointer (inc instruction-pointer)
+            (= symbol \+)
+              (recur data (inc-byte datum) instruction-pointer)
+            (= symbol \-)
+              (recur data (dec-byte datum) instruction-pointer)
             ;;Saleban
             ;; .
             	(= symbol \.)
@@ -118,6 +122,12 @@
             ;;isaac
             ;; [
             ;; ]
+            (= symbol \[)
+            (if (== (data-pointer) 0)
+              (recur data  (inc data-pointer) (instruction-pointer)))
+            (= symbol \])
+            (if (not (data-pointer) 0)
+              (recur data  (inc data-pointer) (instruction-pointer)))
             ;;Saleban
             
             ;; we are providing the input case for you
@@ -127,4 +137,3 @@
                 (recur (assoc data data-pointer input) data-pointer (inc instruction-pointer)))
   
             :else (recur data data-pointer (inc instruction-pointer)))))))
-

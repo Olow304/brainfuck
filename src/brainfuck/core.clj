@@ -28,7 +28,6 @@
   (let [strfirst (map #(str %) [first])]
   	(apply str strfirst))
   )
-
 (defmacro bf
    "Run the given raw code"
    [& code]

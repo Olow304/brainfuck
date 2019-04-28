@@ -58,20 +58,14 @@
   "
   [tokens]
   ;; Code goes here
-  ; (let [all-tokens tokens]
-  ; (loop [x (- (count all-tokens) 1)] (when (> x 0) (
-  ;   (if (= (get all-tokens x) "[" ) (find "]" all-tokens (comment (throw (RuntimeException. all-tokens)))) )
-  ;   )))
-    (let [begin (true? (filter (= (:symbol tokens) (str "["))))]
-      (let [end (true? (reverse (filter (= (:symbol tokens) (str "]")))))]
-        (if (= (count begin) (count end))
-          (into {} (flatten (mapv (fn [k v] {(.indexOf tokens k) (.indexOf tokens v)}) begin end)))
-          (throw (RuntimeException. "Unmatched brackets"))
-        )
-      )
-    )
-              
-)
+  (loop [x 0 matchCount 0]
+    (when (and (< x (count tokens)) (> matchCount -1))
+      (let [c (nth tokens x)]
+        (case c
+          \[ (recur (inc x) (inc matchCount))
+          \] (if (= matchCount 0) x (recur (inc x) (dec matchCount)))
+          (recur (inc x) matchCount))))))
+
           
 
  (defn interpret

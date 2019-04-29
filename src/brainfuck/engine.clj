@@ -44,27 +44,40 @@
 )
 
 
+(defn get-bracket
+  [bracket]
+  (cond 
+    (= (:symbol bracket) \[) true 
+    (= (:symbol bracket) \]) true 
+    :else false
+  )
+)
+
 (defn find-matchings
   ;Saleban
-  "Parse the given tokens returning a map that contains an entry for every [ and ]
-  mapping its index in the given tokens to it matching symbol and vice-versa.
   
-  throws a RuntimeException any unmatched [ or ]
-  The RuntimeException's message will have a useful message including the line and column
-  that the error occurred.
-  
-  Example of throwing a RuntimeException:
-    (throw (RuntimeException. message))
-  "
   [tokens]
   ;; Code goes here
-  (loop [x 0 matchCount 0]
-    (when (and (< x (count tokens)) (> matchCount -1))
-      (let [c (nth tokens x)]
-        (case c
-          \[ (recur (inc x) (inc matchCount))
-          \] (if (= matchCount 0) x (recur (inc x) (dec matchCount)))
-          (recur (inc x) matchCount))))))
+  ;(println "TOKEN IS: " tokens)
+  (cond
+      ; check if the brackets match []
+      (= (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens)))) 
+        (into {} 
+          (flatten (map (fn [k v] {(.indexOf tokens k) 
+            (.indexOf tokens v), (.indexOf tokens v) 
+            (.indexOf tokens k)}) (filter get-bracket tokens) (reverse (filter get-bracket tokens)))
+          )
+        )
+      ; if there is more [ brackets than ]
+      (> (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens))))         
+        (throw (RuntimeException. "Unmatched [ bracket"))
+
+      ; if there is more ] brackets than [
+      (< (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens)))) 
+        (throw (RuntimeException. "Unmatched ] bracket"))
+      
+      :else (throw (RuntimeException. "Unmatched bracket found"))
+  ))
 
           
 
@@ -119,11 +132,16 @@
             ;; [
             ;; ]
             (= symbol \[)
-            (if (== (data-pointer) 0)
-              (recur data  (inc data-pointer) (instruction-pointer)))
+              (let [input (.read *in*)] 
+                (cond
+                  (= datum 0) (recur data data-pointer (inc (matchings instruction-pointer)))
+                  :else (recur data data-pointer (inc instruction-pointer)
+                  )))
+
             (= symbol \])
-            (if (not (data-pointer) 0)
-              (recur data  (inc data-pointer) (instruction-pointer)))
+              (if (not (data-pointer) 0)
+                (recur data (data-pointer = matchings) (dec data-pointer))
+                (recur data  (inc data-pointer) (instruction-pointer)))
             ;;Saleban
             
             ;; we are providing the input case for you

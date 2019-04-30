@@ -1,3 +1,9 @@
+;Code by: Isaac lewis and Saleban Olow
+;Professor: Joshua Auerback
+;Course: CSI 380 Emerging Languages
+;Due date: 28 April 2019
+
+
 (ns brainfuck.core
   "Clojure Brainfuck Interpreter. Usage:
    lein run [-- src ...]
@@ -24,9 +30,8 @@
   Whether the string contains whitespace is optional.
   "
   [first & rest]
-  ;; code goes here
-  (let [strfirst (map #(str %) [first])]
-  	(apply str strfirst))
+  (let [strfirst (map #(str %) [first])] ;create a map of the elements of first as strings
+  	(apply str strfirst)) ;make the whole map into a string
   )
 (defmacro bf
    "Run the given raw code"

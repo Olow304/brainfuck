@@ -42,10 +42,17 @@
 )
 
 
-(defn get-bracket
+(defn test-bracket-l
   [bracket]
   (cond 
     (= (:symbol bracket) \[) true 
+    :else false
+  )
+)
+
+(defn test-bracket-r
+  [bracket]
+  (cond 
     (= (:symbol bracket) \]) true 
     :else false
   )
@@ -53,29 +60,50 @@
 
 (defn find-matchings
   ;Saleban
+   "Parse the given tokens returning a map that contains an entry for every [ and ]
+  mapping its index in the given tokens to it matching symbol and vice-versa.
+  
+  throws a RuntimeException any unmatched [ or ]
+  The RuntimeException's message will have a useful message including the line and column
+  that the error occurred.
+  
+  Example of throwing a RuntimeException:
+    (throw (RuntimeException. message))
+  "
   
   [tokens]
   ;; Code goes here
   ;(println "TOKEN IS: " tokens)
-  (cond
-      ; check if the brackets match []
-      (= (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens)))) 
-        (into {} 
-          (flatten (map (fn [k v] {(.indexOf tokens k) 
-            (.indexOf tokens v), (.indexOf tokens v) 
-            (.indexOf tokens k)}) (filter get-bracket tokens) (reverse (filter get-bracket tokens)))
-          )
-        )
-      ; if there is more [ brackets than ]
-      (> (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens))))         
-        (throw (RuntimeException. "Unmatched [ bracket"))
+  (let [left-brackets (filter test-bracket-l tokens)
+  				 right-brackets (reverse (filter test-bracket-r tokens)) 
+  				 left-indices (map (fn [x] (.indexOf tokens x)) left-brackets) 
+  				 right-indices (map (fn [x] (.indexOf tokens x)) right-brackets) ]
+	  (cond
+	      ; check if the brackets match []
+	      (= (count left-brackets) (count right-brackets)) 
+	       (do (println tokens "tokens\n" left-brackets "LEft Brackets\n" right-brackets "right brackets\n" left-indices "left indices\n" right-indices "right indices\n") 
+	       	(merge (zipmap left-indices right-indices) (zipmap right-indices left-indices))
+	       	)
+	      ; if there is more [ brackets than ]
+	      (> (count left-brackets) (count right-brackets)) 
+      			(do (println (-(count left-brackets) (count right-brackets)) "diff\n" 
+      							tokens "tokens\n" 
+      							left-brackets "LEft Brackets\n" 
+      							right-brackets "right brackets\n" 
+      							left-indices "left indices\n" 
+      							right-indices "right indices\n") 
+	       	 (throw (RuntimeException. (str "Unmatched [ bracket at " (nth left-brackets (- (-(count left-brackets) (count right-brackets))1)))))
+	       	)        
+	       
 
-      ; if there is more ] brackets than [
-      (< (count (filter get-bracket tokens)) (count (reverse (filter get-bracket tokens)))) 
-        (throw (RuntimeException. "Unmatched ] bracket"))
-      
-      :else (throw (RuntimeException. "Unmatched bracket found"))
-  ))
+	      ; if there is more ] brackets than [
+	      (< (count left-brackets) (count right-brackets))
+	        (throw (RuntimeException. (str "Unmatched ] bracket at " (nth right-brackets (- (-(count right-brackets) (count left-brackets))1)))))
+	      
+	      :else (throw (RuntimeException. "Unmatched bracket found"))
+ 		)
+		)
+)
 
           
 
